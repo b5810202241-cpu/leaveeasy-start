@@ -12,9 +12,9 @@ window.LEAVE_DATA = {
 
   // 📁 users — ผู้ใช้ 3 คน 3 บทบาท
   users: [
-    { id: "u001", name: "สมชาย ใจดี",   email: "somchai@example.com", role: "employee" },
-    { id: "u002", name: "สมหญิง รักงาน", email: "somying@example.com", role: "manager" },
-    { id: "u003", name: "สมศรี ตั้งใจ",  email: "somsri@example.com",  role: "hr" }
+    { id: "u001", name: "แสนสวย ร่ำรวยเสน่ห์", email: "saensuay@example.com", role: "employee" },
+    { id: "u002", name: "มิลเลียน เงินล้าน",   email: "million@example.com",  role: "manager" },
+    { id: "u003", name: "บิลลี่ เด็กดี",        email: "billy@example.com",   role: "hr" }
   ],
 
   // 📁 leaveTypes — ประเภทการลา 3 แบบ
@@ -30,32 +30,32 @@ window.LEAVE_DATA = {
   leaveRequests: [
     {
       id: "lr001",
-      title: "ลาพักร้อนไปเที่ยวกับครอบครัว",
-      reason: "วางแผนเดินทางไปต่างจังหวัดกับครอบครัว จองที่พักไว้ล่วงหน้าแล้ว",
+      title: "ลาพักร้อนไปทะเล",
+      reason: "วางแผนไปเที่ยวทะเลกับครอบครัว จองที่พักไว้ล่วงหน้าแล้ว",
       status: "รอพิจารณา",
-      requesterId: "u001", requesterName: "สมชาย ใจดี",
-      approverId: "u002",  approverName: "สมหญิง รักงาน",
+      requesterId: "u001", requesterName: "แสนสวย ร่ำรวยเสน่ห์",
+      approverId: "u002",  approverName: "มิลเลียน เงินล้าน",
       leaveTypeId: "lt001", leaveTypeName: "ลาพักร้อน",
       startDate: "2026-09-07", endDate: "2026-09-09",
       createdAt: "2026-09-01 09:15"
     },
     {
       id: "lr002",
-      title: "ลาป่วยไข้หวัดใหญ่",
-      reason: "มีไข้สูงและไอมาก แพทย์แนะนำให้พักอยู่บ้าน 2 วัน",
+      title: "ลาป่วยเป็นไข้หวัด",
+      reason: "มีไข้และเจ็บคอ แพทย์แนะนำให้พักอยู่บ้าน 2 วัน",
       status: "อนุมัติ",
-      requesterId: "u001", requesterName: "สมชาย ใจดี",
-      approverId: "u002",  approverName: "สมหญิง รักงาน",
+      requesterId: "u001", requesterName: "แสนสวย ร่ำรวยเสน่ห์",
+      approverId: "u002",  approverName: "มิลเลียน เงินล้าน",
       leaveTypeId: "lt002", leaveTypeName: "ลาป่วย",
       startDate: "2026-08-24", endDate: "2026-08-25",
       createdAt: "2026-08-24 08:05"
     },
     {
       id: "lr003",
-      title: "ลากิจไปทำบัตรประชาชน",
-      reason: "บัตรประชาชนหมดอายุ ต้องไปทำที่สำนักงานเขตในวันทำการ",
+      title: "ลากิจทำธุระส่วนตัว",
+      reason: "ต้องไปติดต่อธุระส่วนตัวที่ธนาคารในวันทำการ",
       status: "รอพิจารณา",
-      requesterId: "u003", requesterName: "สมศรี ตั้งใจ",
+      requesterId: "u003", requesterName: "บิลลี่ เด็กดี",
       approverId: "",      approverName: "",
       leaveTypeId: "lt003", leaveTypeName: "ลากิจ",
       startDate: "2026-09-15", endDate: "2026-09-15",
@@ -63,11 +63,11 @@ window.LEAVE_DATA = {
     },
     {
       id: "lr004",
-      title: "ลาพักร้อนช่วงวันหยุดยาว",
+      title: "ลาพักร้อนขยายวันหยุด",
       reason: "อยากต่อวันหยุดยาวไปพักผ่อนกับครอบครัวอีก 3 วัน",
       status: "ไม่อนุมัติ",
-      requesterId: "u003", requesterName: "สมศรี ตั้งใจ",
-      approverId: "u002",  approverName: "สมหญิง รักงาน",
+      requesterId: "u003", requesterName: "บิลลี่ เด็กดี",
+      approverId: "u002",  approverName: "มิลเลียน เงินล้าน",
       leaveTypeId: "lt001", leaveTypeName: "ลาพักร้อน",
       startDate: "2026-10-12", endDate: "2026-10-16",
       createdAt: "2026-09-20 11:00"
@@ -77,8 +77,8 @@ window.LEAVE_DATA = {
       title: "ลาป่วยไปพบแพทย์ตามนัด",
       reason: "มีนัดตรวจติดตามอาการกับแพทย์ในช่วงเช้า",
       status: "รอพิจารณา",
-      requesterId: "u001", requesterName: "สมชาย ใจดี",
-      approverId: "u002",  approverName: "สมหญิง รักงาน",
+      requesterId: "u001", requesterName: "แสนสวย ร่ำรวยเสน่ห์",
+      approverId: "u002",  approverName: "มิลเลียน เงินล้าน",
       leaveTypeId: "lt002", leaveTypeName: "ลาป่วย",
       startDate: "2026-09-22", endDate: "2026-09-22",
       createdAt: "2026-09-18 14:45"
@@ -91,25 +91,25 @@ window.LEAVE_DATA = {
   approvals: [
     {
       id: "ap001", requestId: "lr001",
-      authorId: "u002", authorName: "สมหญิง รักงาน",
+      authorId: "u002", authorName: "มิลเลียน เงินล้าน",
       message: "รับเรื่องแล้ว ขอดูตารางงานของทีมช่วงนั้นก่อนนะครับ",
       createdAt: "2026-09-01 13:40"
     },
     {
       id: "ap002", requestId: "lr001",
-      authorId: "u003", authorName: "สมศรี ตั้งใจ",
+      authorId: "u003", authorName: "บิลลี่ เด็กดี",
       message: "ตรวจแล้ว วันลาพักร้อนคงเหลือครอบคลุมช่วงที่ขอ ไม่ติดขัดฝั่งฝ่ายบุคคล",
       createdAt: "2026-09-02 10:05"
     },
     {
       id: "ap003", requestId: "lr002",
-      authorId: "u002", authorName: "สมหญิง รักงาน",
+      authorId: "u002", authorName: "มิลเลียน เงินล้าน",
       message: "อนุมัติแล้ว พักผ่อนให้เต็มที่ งานที่ค้างไว้เดี๋ยวทีมช่วยดูให้",
       createdAt: "2026-08-24 09:20"
     },
     {
       id: "ap004", requestId: "lr004",
-      authorId: "u002", authorName: "สมหญิง รักงาน",
+      authorId: "u002", authorName: "มิลเลียน เงินล้าน",
       message: "ช่วงนั้นทีมมีงานส่งมอบพอดี ขอเลื่อนเป็นสัปดาห์ถัดไปได้ไหมครับ",
       createdAt: "2026-09-20 15:10"
     }

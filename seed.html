@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seed ข้อมูลตั้งต้น · LeaveEasy</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js" defer></script>
+  <script src="js/firebase-config.js" defer></script>
+  <script src="js/data.js" defer></script>
+  <script src="js/seed.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Seed ข้อมูลตั้งต้นลง Firestore</h1>
+    <p class="subtitle">หน้านี้ใช้ชั่วคราวสำหรับ dev เท่านั้น — ใส่ข้อมูลตัวอย่างเดียวกับ js/data.js ลง Firestore ครั้งเดียว กดซ้ำได้ (เขียนทับ ไม่สร้างซ้ำ)</p>
+
+    <div class="card">
+      <button class="btn" id="ปุ่มSeed">Seed ข้อมูลตั้งต้น</button>
+      <p id="สถานะSeed" class="hint" style="margin-top:12px"></p>
+    </div>
+  </div>
+</body>
+</html>
