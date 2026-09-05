@@ -1,6 +1,7 @@
 // ─────────────────────────────────────────────────────────────
 // js/leave-requests.js — หน้าที่ 1 รายการใบลา
 // สัปดาห์ที่ 6: อ่านแบบ real-time จาก Firestore (leaveRequests collection)
+// สัปดาห์ที่ 8: พนักงาน (employee) เห็นเฉพาะใบของตัวเอง · manager/hr เห็นทุกใบ
 // ─────────────────────────────────────────────────────────────
 
 (function () {
@@ -13,18 +14,23 @@
       "กำลังแสดงเฉพาะใบลาที่สถานะ " + สถานะที่กรอง + " · กดเมนู รายการใบลา เพื่อดูทั้งหมด";
   }
 
-  db.collection("leaveRequests").onSnapshot(function (snap) {
-    var ใบลาทั้งหมด = snap.docs.map(function (doc) {
-      var ข้อมูล = doc.data();
-      ข้อมูล.id = doc.id;
-      return ข้อมูล;
+  รับบทบาทผู้ใช้().then(function (บทบาท) {
+    db.collection("leaveRequests").onSnapshot(function (snap) {
+      var ใบลาทั้งหมด = snap.docs.map(function (doc) {
+        var ข้อมูล = doc.data();
+        ข้อมูล.id = doc.id;
+        return ข้อมูล;
+      });
+      if (บทบาท === "employee") {
+        ใบลาทั้งหมด = ใบลาทั้งหมด.filter(function (ใบ) { return ใบ.requesterId === firebase.auth().currentUser.uid; });
+      }
+      if (สถานะที่กรอง) {
+        ใบลาทั้งหมด = ใบลาทั้งหมด.filter(function (ใบ) { return ใบ.status === สถานะที่กรอง; });
+      }
+      แสดงตาราง(ใบลาทั้งหมด);
+    }, function (error) {
+      กล่อง.innerHTML = "<p>โหลดข้อมูลจาก Firestore ไม่สำเร็จ: " + esc(error.message) + "</p>";
     });
-    if (สถานะที่กรอง) {
-      ใบลาทั้งหมด = ใบลาทั้งหมด.filter(function (ใบ) { return ใบ.status === สถานะที่กรอง; });
-    }
-    แสดงตาราง(ใบลาทั้งหมด);
-  }, function (error) {
-    กล่อง.innerHTML = "<p>โหลดข้อมูลจาก Firestore ไม่สำเร็จ: " + esc(error.message) + "</p>";
   });
 
   function แสดงตาราง(รายการ) {

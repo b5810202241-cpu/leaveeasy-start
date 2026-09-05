@@ -1,7 +1,9 @@
 // ─────────────────────────────────────────────────────────────
 // js/leave-request-detail.js — หน้าที่ 3 รายละเอียดใบลา
 // สัปดาห์ที่ 7: อ่านใบลาจริงจาก Firestore + ปุ่มลบเขียนลบจริง
-// (ปุ่มอนุมัติ/ไม่อนุมัติ และความเห็น ยังแก้แค่ในหน่วยความจำเหมือนเดิม — รอทำเป็นของจริงทีหลัง)
+// สัปดาห์ที่ 8: จำกัดปุ่ม/การเข้าถึงตามบทบาท (employee เปิดใบคนอื่นไม่ได้,
+// อนุมัติ/ไม่อนุมัติเฉพาะ manager/hr, ลบได้เฉพาะ employee เจ้าของใบเอง)
+// (ความเห็น ยังแก้แค่ในหน่วยความจำเหมือนเดิม — รอทำเป็นของจริงทีหลัง)
 // ─────────────────────────────────────────────────────────────
 
 (function () {
@@ -9,9 +11,15 @@
   var กล่องใบลา = document.getElementById("กล่องใบลา");
   var กล่องความเห็น = document.getElementById("กล่องความเห็น");
 
-  var ใบ, ความเห็น;
+  var ใบ, ความเห็น, บทบาทผู้ใช้;
 
-  db.collection("leaveRequests").doc(รหัสใบลา).get().then(function (เอกสาร) {
+  Promise.all([
+    db.collection("leaveRequests").doc(รหัสใบลา).get(),
+    รับบทบาทผู้ใช้()
+  ]).then(function (ผลลัพธ์) {
+    var เอกสาร = ผลลัพธ์[0];
+    บทบาทผู้ใช้ = ผลลัพธ์[1];
+
     if (!เอกสาร.exists) {
       กล่องใบลา.innerHTML = "<p>ไม่พบใบขอลาที่ต้องการ — อาจถูกลบไปแล้ว หรือลิงก์ไม่ถูกต้อง</p>";
       return;
@@ -19,6 +27,12 @@
 
     ใบ = เอกสาร.data();
     ใบ.id = เอกสาร.id;
+
+    // employee เปิดใบของคนอื่นไม่ได้ (US-08)
+    if (บทบาทผู้ใช้ === "employee" && ใบ.requesterId !== firebase.auth().currentUser.uid) {
+      กล่องใบลา.innerHTML = "<p>ไม่มีสิทธิ์เข้าดูใบลานี้</p>";
+      return;
+    }
 
     ความเห็น = window.LEAVE_DATA.approvals.filter(function (c) { return c.requestId === ใบ.id; });
 
@@ -48,23 +62,33 @@
       return '<div class="field-row"><span class="k">' + r[0] + "</span><span>" + r[1] + "</span></div>";
     }).join("");
 
-    // ปุ่มอนุมัติ / ไม่อนุมัติ / ลบ ขึ้นเฉพาะใบที่ยังรอพิจารณา (US-07: สถานะอื่นกดลบไม่ได้)
-    if (ใบ.status === "รอพิจารณา") {
-      html +=
-        '<div class="btn-row">' +
-        '<button type="button" class="btn-ok" id="ปุ่มอนุมัติ">อนุมัติ</button>' +
-        '<button type="button" class="btn-danger" id="ปุ่มไม่อนุมัติ">ไม่อนุมัติ</button>' +
-        '<button type="button" class="btn-danger" id="ปุ่มลบ">ลบ</button>' +
-        "</div>";
-    } else {
+    // อนุมัติ/ไม่อนุมัติ — เฉพาะ manager/hr · ลบ — เฉพาะ employee เจ้าของใบเอง (ตาม ACL.md)
+    var ผู้ใช้ปัจจุบัน = firebase.auth().currentUser;
+    var อนุมัติได้ = (บทบาทผู้ใช้ === "manager" || บทบาทผู้ใช้ === "hr") && ใบ.status === "รอพิจารณา";
+    var ลบได้ = บทบาทผู้ใช้ === "employee" && ใบ.requesterId === ผู้ใช้ปัจจุบัน.uid && ใบ.status === "รอพิจารณา";
+
+    if (อนุมัติได้ || ลบได้) {
+      html += '<div class="btn-row">';
+      if (อนุมัติได้) {
+        html +=
+          '<button type="button" class="btn-ok" id="ปุ่มอนุมัติ">อนุมัติ</button>' +
+          '<button type="button" class="btn-danger" id="ปุ่มไม่อนุมัติ">ไม่อนุมัติ</button>';
+      }
+      if (ลบได้) {
+        html += '<button type="button" class="btn-danger" id="ปุ่มลบ">ลบ</button>';
+      }
+      html += "</div>";
+    } else if (ใบ.status !== "รอพิจารณา") {
       html += '<p class="hint">ใบนี้พิจารณาแล้ว จึงเปลี่ยนสถานะต่อไม่ได้</p>';
     }
 
     กล่องใบลา.innerHTML = html;
 
-    if (ใบ.status === "รอพิจารณา") {
+    if (อนุมัติได้) {
       document.getElementById("ปุ่มอนุมัติ").addEventListener("click", function () { เปลี่ยนสถานะ("อนุมัติ"); });
       document.getElementById("ปุ่มไม่อนุมัติ").addEventListener("click", function () { เปลี่ยนสถานะ("ไม่อนุมัติ"); });
+    }
+    if (ลบได้) {
       document.getElementById("ปุ่มลบ").addEventListener("click", ลบใบลา);
     }
   }

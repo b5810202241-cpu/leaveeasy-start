@@ -30,3 +30,18 @@ function เวลาตอนนี้() {
 function ค่าจากURL(ชื่อ) {
   return new URLSearchParams(location.search).get(ชื่อ) || "";
 }
+
+// อ่านบทบาท (role) ของผู้ใช้ที่ล็อกอินอยู่ จาก users/{uid} — คืน Promise ที่ได้ค่า
+// "employee" / "manager" / "hr" หรือ null ถ้ายังไม่ได้ล็อกอิน/ไม่พบไฟล์ผู้ใช้
+// รอให้ Firebase คืนค่าสถานะล็อกอินที่แท้จริงก่อนเสมอ (currentUser ยังเป็น null ชั่วขณะตอนเพิ่งโหลดหน้า)
+function รับบทบาทผู้ใช้() {
+  return new Promise(function (resolve) {
+    var ยกเลิกฟัง = firebase.auth().onAuthStateChanged(function (ผู้ใช้) {
+      ยกเลิกฟัง();
+      if (!ผู้ใช้) { resolve(null); return; }
+      db.collection("users").doc(ผู้ใช้.uid).get().then(function (เอกสาร) {
+        resolve(เอกสาร.exists ? เอกสาร.data().role : null);
+      });
+    });
+  });
+}

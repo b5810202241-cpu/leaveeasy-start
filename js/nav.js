@@ -41,6 +41,18 @@
       document.getElementById("ปุ่มออกจากระบบ").addEventListener("click", function () {
         firebase.auth().signOut().then(function () { location.href = "login.html"; });
       });
+
+      // "ประเภทการลา" เป็นเมนูของฝ่ายบุคคล (hr) เท่านั้น
+      รับบทบาทผู้ใช้().then(function (บทบาท) {
+        if (บทบาท === "hr") return;
+
+        var ลิงก์ประเภทการลา = document.querySelector('a[href="leave-types.html"]');
+        if (ลิงก์ประเภทการลา) ลิงก์ประเภทการลา.remove();
+
+        if (หน้าปัจจุบันไม่มีนามสกุล === "leave-types") {
+          location.href = "leave-requests.html";
+        }
+      });
     } else {
       ที่วางUser.innerHTML = '<a href="login.html">เข้าสู่ระบบ</a>';
       if (หน้าที่ต้องล็อกอิน.indexOf(หน้าปัจจุบันไม่มีนามสกุล) !== -1) {
