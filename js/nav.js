@@ -21,11 +21,33 @@
     var active = m.href === หน้าปัจจุบัน ? ' class="active"' : "";
     html += '<a href="' + m.href + '"' + active + ">" + m.ชื่อ + "</a>";
   });
-  // ช่องว่างสำหรับแสดงชื่อคนที่ล็อกอินอยู่ (เติมค่าในสัปดาห์ที่ 7)
   html += '<span class="nav-user" id="navUser"></span></div>';
 
   var ที่วาง = document.getElementById("nav");
   if (ที่วาง) ที่วาง.innerHTML = html;
+
+  // ── หน้าที่ต้องล็อกอินก่อนถึงจะเปิดได้ (เทียบแบบไม่สนนามสกุล กันกรณี server/บราวเซอร์ตัด .html ออก) ──
+  var หน้าปัจจุบันไม่มีนามสกุล = หน้าปัจจุบัน.replace(/\.html$/, "");
+  var หน้าที่ต้องล็อกอิน = ["leave-requests", "new-leave-request", "leave-request-detail", "leave-types"];
+
+  firebase.auth().onAuthStateChanged(function (ผู้ใช้) {
+    var ที่วางUser = document.getElementById("navUser");
+    if (!ที่วางUser) return;
+
+    if (ผู้ใช้) {
+      ที่วางUser.innerHTML =
+        esc(ผู้ใช้.displayName || ผู้ใช้.email) +
+        ' <button type="button" class="btn-ghost" id="ปุ่มออกจากระบบ">ออกจากระบบ</button>';
+      document.getElementById("ปุ่มออกจากระบบ").addEventListener("click", function () {
+        firebase.auth().signOut().then(function () { location.href = "login.html"; });
+      });
+    } else {
+      ที่วางUser.innerHTML = '<a href="login.html">เข้าสู่ระบบ</a>';
+      if (หน้าที่ต้องล็อกอิน.indexOf(หน้าปัจจุบันไม่มีนามสกุล) !== -1) {
+        location.href = "login.html";
+      }
+    }
+  });
 })();
 
 // แถบเตือนสีเหลือง ใช้ตอนที่ยังไม่ได้ตั้งค่า Firebase
