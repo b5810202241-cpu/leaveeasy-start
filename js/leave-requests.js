@@ -14,7 +14,11 @@
   }
 
   db.collection("leaveRequests").onSnapshot(function (snap) {
-    var ใบลาทั้งหมด = snap.docs.map(function (doc) { return doc.data(); });
+    var ใบลาทั้งหมด = snap.docs.map(function (doc) {
+      var ข้อมูล = doc.data();
+      ข้อมูล.id = doc.id;
+      return ข้อมูล;
+    });
     if (สถานะที่กรอง) {
       ใบลาทั้งหมด = ใบลาทั้งหมด.filter(function (ใบ) { return ใบ.status === สถานะที่กรอง; });
     }
